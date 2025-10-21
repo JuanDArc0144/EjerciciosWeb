@@ -9,6 +9,7 @@
 <body>
   <header>
     <h1>Agregar nuevo servicio</h1>
+    <a href="index.html">Ver Servicios</a>
   </header>
 
   <form id="formServicio">
@@ -28,7 +29,12 @@
        oninput="this.setCustomValidity('')" />
 
     <label for="url">URL de la imagen:</label>
-    <input type="url" id="imagen" required />
+    <input type="url" id="imagen" required placeholder="https://ejemplo.com/imagen.jpg" />
+
+    <label for="gif">URL del GIF (hover):</label>
+    <input type="url" id="gif" required placeholder="https://ejemplo.com/animacion.gif"
+       oninvalid="this.setCustomValidity('No olvides el GIF animado! 🎬')"
+       oninput="this.setCustomValidity('')" />
 
     <button type="submit">Guardar servicio</button>
   </form>

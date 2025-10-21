@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Servicios de Ingeniería en Sistemas</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+  <header>
+    <h1>Servicios de Ingeniería en Sistemas</h1>
+    <a href="alta.html">Agregar nuevo servicio</a>
+  </header>
+
+  <div id="app">
+    <div id="servicios-container">
+      <div v-for="servicio in servicios" 
+           :key="servicio.nombre" 
+           class="servicio" 
+           :class="{ premium: servicio.precio > 1000 }">
+      <div v-if="servicio.gif">
+        <img :src="servicio.imagen" 
+             @mouseover="cambiarGif($event, servicio.gif)" 
+             @mouseout="cambiarGif($event, servicio.imagen)" 
+             :alt="servicio.nombre">
+      </div>
+      <div v-else>
+        <img :src="servicio.imagen" :alt="servicio.nombre">
+      </div>
+        <h3>{{ servicio.nombre }}</h3>
+        <p>{{ servicio.descripcion }}</p>
+        <p><strong>${{ servicio.precio.toFixed(2) }}</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return { servicios: [] };
+      },
+      mounted() {
+        this.servicios = JSON.parse(localStorage.getItem('servicios') || '[]');
+      },
+      methods: {
+        cambiarGif(e, nuevaSrc) {
+          e.target.src = nuevaSrc;
+        }
+      }
+    });
+    app.mount('#app');
+  </script>
+</body>
+</html>

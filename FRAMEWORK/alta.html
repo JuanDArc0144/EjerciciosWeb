@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agregar nuevo servicio</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+  <header>
+    <h1>Registrar Servicio</h1>
+    <a href="index.html">Ver Servicios</a>
+  </header>
+
+  <div id="app">
+    <form @submit.prevent="agregarServicio">
+      <label for="nombre">Nombre del servicio:</label>
+      <input id="nombre" v-model="nuevo.nombre" placeholder="Ej. Desarrollo Web" required>
+
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" v-model="nuevo.descripcion" placeholder="Describe tu servicio"></textarea>
+
+      <label for="precio">Precio:</label>
+      <input v-model.number="nuevo.precio" type="number" min="0" required>
+
+      <label for="url">URL de imagen:</label>
+      <input v-model="nuevo.imagen" placeholder="https://...jpg">
+
+      <label for="gif">URL del GIF (hover):</label>
+      <input v-model="nuevo.gif" placeholder="https://...gif">
+
+      <button type="submit">Guardar servicio</button>
+
+      <div class="mensaje" v-if="mensaje" :style="{ color: mensajeColor }">{{ mensaje }}</div>
+    </form>
+  </div>
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          nuevo: { nombre: '', descripcion: '', precio: '', imagen: '', gif: '' },
+          mensaje: '',
+          mensajeColor: ''
+        };
+      },
+      methods: {
+        validarTexto(texto) {
+          return /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,-]+$/.test(texto);
+        },
+        agregarServicio() {
+          const { nombre, descripcion, precio, imagen, gif } = this.nuevo;
+
+          if (!nombre || !descripcion || !precio || !imagen || !gif) {
+            this.mensaje = 'Todos los campos son obligatorios.';
+            this.mensajeColor = '#e06c75';
+            return;
+          }
+          if (!this.validarTexto(nombre) || !this.validarTexto(descripcion)) {
+            this.mensaje = 'No se permiten caracteres especiales.';
+            this.mensajeColor = '#e06c75';
+            return;
+          }
+          if (precio <= 0) {
+            this.mensaje = 'El precio debe ser mayor a 0.';
+            this.mensajeColor = '#e06c75';
+            return;
+          }
+
+          const servicios = JSON.parse(localStorage.getItem('servicios') || '[]');
+          servicios.push({ ...this.nuevo });
+          localStorage.setItem('servicios', JSON.stringify(servicios));
+
+          this.mensaje = 'Servicio agregado exitosamente.';
+          this.mensajeColor = '#98c379';
+          this.nuevo = { nombre: '', descripcion: '', precio: '', imagen: '', gif: '' };
+
+          setTimeout(() => {
+            globalThis.location.href = "index.html";
+          }, 1500);
+        }
+      }
+    }
+  );
+    app.mount('#app');
+  </script>
+</body>
+</html>
